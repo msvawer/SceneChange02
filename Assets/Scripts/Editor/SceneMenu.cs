@@ -29,8 +29,9 @@ public static class SceneMenu
 
     static void OpenScene(string name)
     {
-        Scene PersistentScene = EditorSceneManager.OpenScene("Assets/Scenes/" + SceneUtils.Names.XRPersistent + ".unity", OpenSceneMode.Single);
+        Scene persistentScene = EditorSceneManager.OpenScene("Assets/Scenes/" + SceneUtils.Names.XRPersistent + ".unity", OpenSceneMode.Single);
         Scene currentScene = EditorSceneManager.OpenScene("Assets/Scenes/" + name + ".unity", OpenSceneMode.Additive);
+        SceneUtils.AlignXRRig(persistentScene, currentScene);
     }
 
 
