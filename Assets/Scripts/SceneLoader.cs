@@ -23,9 +23,17 @@ public class SceneLoader : Singleton<SceneLoader>
 
     bool m_isLoading = false;
 
+    Scene m_persistentScene;
+
     private void Awake()
     {
         SceneManager.sceneLoaded += SetActiveScene;
+        m_persistentScene = SceneManager.GetActiveScene();
+
+        if(!Application.isEditor)
+        {
+            SceneManager.LoadSceneAsync(SceneUtils.Names.SampleScene, LoadSceneMode.Additive);
+        }
 
     }
 
@@ -46,7 +54,7 @@ public class SceneLoader : Singleton<SceneLoader>
     void SetActiveScene(Scene scene, LoadSceneMode mode)
     {
         SceneManager.SetActiveScene(scene);
-        SceneUtils.AlignXRRig(persistentScene, scene);
+        SceneUtils.AlignXRRig(m_persistentScene, scene);
     }
 
     void SetActiveScene()
@@ -58,12 +66,12 @@ public class SceneLoader : Singleton<SceneLoader>
     {
         m_isLoading = true;
         onLoadStart?.Invoke();
-        yield return FadeOut();
+        //yield return FadeOut();
         yield return StartCoroutine(UnloadCurrentScene());
 
         yield return new WaitForSeconds(addedWaitTime);
 
-        yield return FadeIn();
+       // yield return FadeIn();
         yield return StartCoroutine(LoadNewScene(name));
         onLoadFinish?.Invoke();
         m_isLoading = false;
@@ -84,36 +92,36 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null;
     }
 
-    IEnumerator FadeOut()
-    {
-        if(m_fadeCoroutine != null)
-        {
-            StopCoroutine(m_fadeCoroutine);
-        }
-        m_fadeCoroutine = StartCoroutine(Fade(1.0f));
-        yield return m_fadeCoroutine;
-    }
+   // IEnumerator FadeOut()
+   // {
+    //    if(m_fadeCoroutine != null)
+    //    {
+    //        StopCoroutine(m_fadeCoroutine);
+    //    }
+    //    m_fadeCoroutine = StartCoroutine(Fade(1.0f));
+    //    yield return m_fadeCoroutine;
+   // }
 
-    IEnumerator FadeIn()
-    {
-        if (m_fadeCoroutine != null)
-        {
-            StopCoroutine(m_fadeCoroutine);
-        }
-        m_fadeCoroutine = StartCoroutine(Fade(0.0f));
-        yield return m_fadeCoroutine;
-    }
+   // IEnumerator FadeIn()
+   // {
+     ///   if (m_fadeCoroutine != null)
+     //   {
+      //      StopCoroutine(m_fadeCoroutine);
+     //   }
+      //  m_fadeCoroutine = StartCoroutine(Fade(0.0f));
+     //   yield return m_fadeCoroutine;
+   // }
 
-    IEnumerator Fade(float target)
-    {
-        while(Mathf.Approximately(m_fadeAmount, target))
-        {
-            m_fadeAmount = Mathf.MoveTowards(m_fadeAmount, target, fadeSpeed * Time.deltaTime);
-            ScreenFade.SetFloat(m_fadeAmounPropID, m_fadeAmount);
-            yield return null;
-        }
+   // IEnumerator Fade(float target)
+   // {
+    //    while(Mathf.Approximately(m_fadeAmount, target))
+    //    {
+    //        m_fadeAmount = Mathf.MoveTowards(m_fadeAmount, target, fadeSpeed * Time.deltaTime);
+     //       ScreenFade.SetFloat(m_fadeAmounPropID, m_fadeAmount);
+      //      yield return null;
+     //   }
 
-        screenFade.SetFloat(m_FadeAmount.PropID, target);
-    }
+     //   screenFade.SetFloat(m_FadeAmount.PropID, target);
+   // }
 
 }
