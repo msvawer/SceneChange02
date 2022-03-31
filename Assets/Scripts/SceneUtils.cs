@@ -5,6 +5,15 @@ using UnityEngine.SceneManagement;
 
 public static class SceneUtils
 {
+    public enum SceneId
+    { 
+        SampleScene,
+        Scene2,
+        Scene3
+    }
+
+    public static readonly string[] scenes = { Names.SampleScene, Names.Scene2, Names.Scene3 };
+
     public static class Names
     {
         //*The scene names in the quotes need to be the exact names of the actual scenes
